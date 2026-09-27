@@ -1,0 +1,12 @@
+{
+  "name": "برنامه‌ریز پرنسسی درس",
+  "short_name": "درس پرنسسی",
+  "description": "برنامه‌ریز مطالعه‌ی روزانه با زمان‌بندی درس و استراحت",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fff4fa",
+  "theme_color": "#ff7eb8",
+  "icons": []
+}

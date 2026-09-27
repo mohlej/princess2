@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ff7eb8" />
+  <meta name="description" content="برنامه‌ریز مطالعه‌ی پرنسسی برای ساخت برنامه‌ی روزانه، زمان‌بندی درس‌ها و استراحت‌ها" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <title>برنامه‌ریز پرنسسی درس ✨</title>
+</head>
+<body>
+  <div class="sparkles" aria-hidden="true">
+    <span>✦</span><span>♡</span><span>✧</span><span>★</span><span>♡</span><span>✦</span>
+  </div>
+
+  <main class="app-shell">
+    <header class="hero card">
+      <div class="hero-badge">👑 برنامه‌ریز پرنسسی</div>
+      <h1>امروز با برنامه می‌درخشم ✨</h1>
+      <p>درس‌ها، استراحت‌ها و زمان پایان روزت را خیلی مرتب بچین.</p>
+      <div class="save-status" id="saveStatus">همه‌چیز خودکار ذخیره می‌شود 💗</div>
+    </header>
+
+    <section class="card settings-card">
+      <div class="section-title">
+        <div>
+          <span class="eyebrow">شروع برنامه</span>
+          <h2>تنظیمات امروز</h2>
+        </div>
+        <span class="icon-bubble">🪄</span>
+      </div>
+
+      <div class="form-grid">
+        <label class="field">
+          <span>زمان شروع</span>
+          <input type="time" id="startTime" />
+        </label>
+
+        <label class="field">
+          <span>زمان مطالعه‌ی هر دور (دقیقه)</span>
+          <input type="number" id="defaultStudy" min="5" max="180" step="5" value="45" />
+        </label>
+
+        <label class="field">
+          <span>استراحت بین دورها (دقیقه)</span>
+          <input type="number" id="breakTime" min="0" max="120" step="5" value="15" />
+        </label>
+
+        <label class="field">
+          <span>استراحت بلند بعد از هر</span>
+          <select id="longBreakEvery">
+            <option value="0">نداشته باشم</option>
+            <option value="2">۲ دور</option>
+            <option value="3" selected>۳ دور</option>
+            <option value="4">۴ دور</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>مدت استراحت بلند (دقیقه)</span>
+          <input type="number" id="longBreakTime" min="5" max="180" step="5" value="30" />
+        </label>
+      </div>
+    </section>
+
+    <section class="card subjects-card">
+      <div class="section-title">
+        <div>
+          <span class="eyebrow">درس‌های من</span>
+          <h2>امروز چی بخونم؟</h2>
+        </div>
+        <button class="small-button ghost" id="clearAllBtn" type="button">پاک کردن همه</button>
+      </div>
+
+      <div id="subjectsList" class="subjects-list"></div>
+
+      <button class="add-subject-btn" id="addSubjectBtn" type="button">
+        <span class="plus">＋</span>
+        اضافه کردن درس جدید
+      </button>
+    </section>
+
+    <section class="card actions-card">
+      <button class="primary-btn" id="buildPlanBtn" type="button">
+        <span>✨ برنامه‌ام را بساز</span>
+        <span class="arrow">←</span>
+      </button>
+      <button class="secondary-btn" id="resetTodayBtn" type="button">شروع یک روز جدید</button>
+    </section>
+
+    <section id="resultSection" class="result-section hidden">
+      <div class="summary-grid">
+        <article class="summary-card pink">
+          <span class="summary-icon">⏳</span>
+          <span class="summary-label">کل زمان برنامه</span>
+          <strong id="totalDuration">۰ دقیقه</strong>
+        </article>
+        <article class="summary-card purple">
+          <span class="summary-icon">📚</span>
+          <span class="summary-label">زمان مطالعه</span>
+          <strong id="studyDuration">۰ دقیقه</strong>
+        </article>
+        <article class="summary-card peach">
+          <span class="summary-icon">🏁</span>
+          <span class="summary-label">پایان برنامه</span>
+          <strong id="finishTime">--:--</strong>
+        </article>
+      </div>
+
+      <section class="card schedule-card">
+        <div class="section-title">
+          <div>
+            <span class="eyebrow">برنامه‌ی ساخته‌شده</span>
+            <h2>نقشه‌ی امروزت</h2>
+          </div>
+          <span class="icon-bubble">🌸</span>
+        </div>
+
+        <div id="timeline" class="timeline"></div>
+      </section>
+
+      <section class="card now-card" id="nowCard">
+        <div class="now-topline">
+          <span class="live-dot"></span>
+          وضعیت الان
+        </div>
+        <h3 id="nowTitle">برنامه هنوز شروع نشده</h3>
+        <p id="nowSubtitle">وقتی زمانش برسد، اینجا مرحله‌ی فعلی را می‌بینی.</p>
+        <div class="progress-track"><div id="nowProgress" class="progress-fill"></div></div>
+      </section>
+    </section>
+
+    <footer>
+      ساخته‌شده برای روزهای قشنگ و موفق 💕
+    </footer>
+  </main>
+
+  <template id="subjectTemplate">
+    <article class="subject-row">
+      <div class="subject-main">
+        <span class="subject-emoji">📖</span>
+        <label class="field subject-name-field">
+          <span>نام درس</span>
+          <input class="subject-name" type="text" maxlength="35" placeholder="مثلاً جغرافیا" />
+        </label>
+      </div>
+
+      <div class="subject-options">
+        <label class="field compact">
+          <span>هر دور</span>
+          <div class="input-with-unit"><input class="subject-minutes" type="number" min="5" max="180" step="5" /><small>دقیقه</small></div>
+        </label>
+
+        <label class="field compact">
+          <span>چند دور؟</span>
+          <div class="stepper">
+            <button type="button" class="round-minus" aria-label="کم کردن تعداد دور">−</button>
+            <input class="subject-rounds" type="number" min="1" max="20" value="1" readonly />
+            <button type="button" class="round-plus" aria-label="زیاد کردن تعداد دور">＋</button>
+          </div>
+        </label>
+
+        <button class="delete-subject" type="button" aria-label="حذف درس">🗑️</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
