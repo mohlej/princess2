@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261011-v4" />
+  <link rel="stylesheet" href="style.css?v=20261011-v5" />
   <title>برنامه‌ریز پرنسسی درس ✨</title>
 </head>
 <body>
@@ -245,7 +245,7 @@
         <div class="section-title"><div><span class="eyebrow">هر کار کوچیک، یک قدم رو به جلو</span><h2>چک‌لیست کارهای من ✅</h2></div><span class="icon-bubble">🎯</span></div>
         <form id="taskForm" class="hub-form task-form">
           <label class="field field-wide"><span>چه کاری باید انجام بدی؟</span><input id="taskTitle" type="text" maxlength="110" placeholder="مثلاً تمرین فصل سوم ریاضی" required /></label>
-          <label class="field"><span>تاریخ انجام</span><input id="taskDate" type="date" required /></label>
+          <label class="field"><span>تاریخ انجام</span><input id="taskDate" type="text" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="۱۴۰۵/۰۷/۱۹" dir="ltr" required /></label>
           <label class="field"><span>اولویت</span><select id="taskPriority"><option value="normal">🌷 معمولی</option><option value="high">🔥 مهم</option><option value="low">☁️ سبک</option></select></label>
           <button type="submit" id="taskSaveBtn" class="primary-btn form-submit">＋ اضافه کردن کار</button>
           <button type="button" id="taskCancel" class="small-button ghost hidden">لغو ویرایش</button>
@@ -277,7 +277,7 @@
         <div class="chart-title-row"><h3>نمودار زمان مطالعه</h3><div class="filter-pills" role="group" aria-label="بازه نمودار"><button class="filter-button active" type="button" data-chart-range="7">۷ روز</button><button class="filter-button" type="button" data-chart-range="30">۳۰ روز</button></div></div>
         <div class="bar-chart-scroll"><div class="bar-chart" id="studyChart" role="img" aria-label="نمودار زمان مطالعه"></div></div>
         <p class="small-muted">فقط جلسات کامل‌شده‌ی پومودورو و مطالعه‌هایی که خودت ثبت می‌کنی، در آمار حساب می‌شوند؛ زمان برنامه‌ریزی‌شده به‌تنهایی مطالعه‌ی انجام‌شده نیست.</p>
-        <form id="manualSessionForm" class="hub-form manual-form"><label class="field"><span>ثبت دستی مطالعه (دقیقه)</span><input id="manualMinutes" type="number" min="1" max="720" value="30" required /></label><label class="field"><span>تاریخ مطالعه</span><input id="manualDate" type="date" required /></label><button class="primary-btn form-submit" type="submit">＋ ثبت زمان مطالعه</button></form>
+        <form id="manualSessionForm" class="hub-form manual-form"><label class="field"><span>ثبت دستی مطالعه (دقیقه)</span><input id="manualMinutes" type="number" min="1" max="720" value="30" required /></label><label class="field"><span>تاریخ مطالعه</span><input id="manualDate" type="text" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="۱۴۰۵/۰۷/۱۹" dir="ltr" required /></label><button class="primary-btn form-submit" type="submit">＋ ثبت زمان مطالعه</button></form>
         <div class="tool-row"><h3>جلسات اخیر</h3><span class="small-muted">امکان حذف ثبت اشتباهی</span></div><div id="studySessions" class="item-list compact-list"></div>
       </div>
       <div class="card feature-card streak-feature"><div class="section-title"><div><span class="eyebrow">یه روز دیگه، یه پیروزی دیگه</span><h2>زنجیره موفقیت 🔥</h2></div><span class="icon-bubble">🏆</span></div>
@@ -301,7 +301,7 @@
     <section id="examsPanel" role="tabpanel" aria-labelledby="examsTab" class="hub-panel hidden" hidden>
       <div class="card feature-card">
         <div class="section-title"><div><span class="eyebrow">تا روز مهم، با خیال راحت</span><h2>شمارش معکوس امتحان‌ها ⏳</h2></div><span class="icon-bubble">🎓</span></div>
-        <form id="examForm" class="hub-form"><label class="field field-wide"><span>اسم امتحان</span><input id="examName" maxlength="90" type="text" placeholder="مثلاً امتحان علوم" required /></label><label class="field"><span>روز امتحان</span><input id="examDate" type="date" required /></label><label class="field"><span>ساعت شروع</span><input id="examTime" type="time" value="09:00" required /></label><div class="exam-form-actions"><button id="examSaveBtn" type="submit" class="primary-btn">＋ اضافه کردن امتحان</button><button type="button" class="small-button ghost hidden" id="examCancel">لغو ویرایش</button></div></form>
+        <form id="examForm" class="hub-form"><label class="field field-wide"><span>اسم امتحان</span><input id="examName" maxlength="90" type="text" placeholder="مثلاً امتحان علوم" required /></label><label class="field"><span>روز امتحان</span><input id="examDate" type="text" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="۱۴۰۵/۰۷/۱۹" dir="ltr" required /></label><label class="field"><span>ساعت شروع</span><input id="examTime" type="time" value="09:00" required /></label><div class="exam-form-actions"><button id="examSaveBtn" type="submit" class="primary-btn">＋ اضافه کردن امتحان</button><button type="button" class="small-button ghost hidden" id="examCancel">لغو ویرایش</button></div></form>
         <div id="nextExamFeature" class="next-exam-feature hidden"></div>
         <div class="tool-row"><h3>امتحان‌های من</h3><span class="small-muted">زمان باقی‌مانده به‌صورت زنده به‌روز می‌شود.</span></div><div id="examsList" class="item-list"></div>
       </div>
@@ -342,10 +342,11 @@
     </article>
   </template>
 
-  <script src="data.js?v=20261011-v4"></script>
-  <script src="app.js?v=20261011-v4"></script>
-  <script src="hub.js?v=20261011-v4"></script>
-  <script src="pomodoro.js?v=20261011-v4"></script>
-  <script src="tabs.js?v=20261011-v4"></script>
+  <script src="data.js?v=20261011-v5"></script>
+  <script src="app.js?v=20261011-v5"></script>
+  <script src="jalali-date.js?v=20261011-v5"></script>
+  <script src="hub.js?v=20261011-v5"></script>
+  <script src="pomodoro.js?v=20261011-v5"></script>
+  <script src="tabs.js?v=20261011-v5"></script>
 </body>
 </html>

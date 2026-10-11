@@ -4,7 +4,7 @@
   const D = window.PrincessData;
   const $ = id => document.getElementById(id);
   const fa = new Intl.NumberFormat('fa-IR');
-  const gregDate = new Intl.DateTimeFormat('fa-IR', {day:'numeric', month:'long',year:'numeric'});
+  const gregDate = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {day:'numeric', month:'long',year:'numeric'});
   const jalaliMonth = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {month:'long', year:'numeric'});
   const jalaliParts = new Intl.DateTimeFormat('en-US-u-ca-persian', { year:'numeric', month:'numeric', day:'numeric' });
   const DAY = 86400000;
@@ -16,7 +16,7 @@
   const addDays = (date, num) => new Date(date.getFullYear(), date.getMonth(), date.getDate() + num, 12);
   const hasIsoDate = iso => /^\d{4}-\d\d-\d\d$/.test(iso) && local(dateAt(iso)) === iso;
   const safeArray = v => Array.isArray(v) ? v.filter(x => x && typeof x === 'object' && !Array.isArray(x)) : [];
-  const inputDate = id => { $(id).value = today(); };
+  const inputDate = id => { window.PrincessJalali.set(id, today()); };
   let stored = D.read('hub', {});
   if (!stored || typeof stored !== 'object' || Array.isArray(stored)) stored = {};
   const db = {
@@ -93,7 +93,7 @@
   $('exportBtn').addEventListener('click', () => {
     const blob = new Blob([JSON.stringify(D.export(), null, 2)], {type:'application/json;charset=utf-8'});
     const url = URL.createObjectURL(blob); const a = document.createElement('a');
-    a.href = url; a.download = `princess-study-backup-${today()}.json`; document.body.append(a); a.click(); a.remove();
+    a.href = url; a.download = `princess-study-backup-${window.PrincessJalali.fromIso(today()).replaceAll('/', '-')}.json`; document.body.append(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 2000); toast('پشتیبان این پروفایل دانلود شد 💾');
   });
   $('importBtn').addEventListener('click', () => $('importFile').click());
@@ -134,8 +134,8 @@
     }
   }
   $('taskForm').addEventListener('submit', e => {
-    e.preventDefault(); const title = $('taskTitle').value.trim(), date = $('taskDate').value;
-    if (!title || !hasIsoDate(date)) return;
+    e.preventDefault(); const title = $('taskTitle').value.trim(), date = window.PrincessJalali.get('taskDate');
+    if (!title || !hasIsoDate(date)) { toast('تاریخ شمسی معتبر وارد کن؛ مثلاً ۱۴۰۵/۰۷/۱۹'); $('taskDate').focus(); return; }
     if (editingTask) {
       const task = db.tasks.find(t => t.id === editingTask);
       if (task) { task.title=title.slice(0,110); task.date=date; task.priority=$('taskPriority').value; }
@@ -143,7 +143,7 @@
     if (save()) { clearTaskForm(); toast('کارت ذخیره شد 🌸'); updateAll(); $('taskTitle').focus(); }
   });
   function clearTaskForm() {
-    editingTask = null; $('taskForm').reset();$('taskDate').value=today();
+    editingTask = null; $('taskForm').reset();window.PrincessJalali.set('taskDate', today());
     $('taskSaveBtn').textContent='＋ اضافه کردن کار';$('taskCancel').classList.add('hidden');
   }
   $('taskCancel').addEventListener('click',clearTaskForm);
@@ -157,7 +157,7 @@
     const edit = e.target.closest('[data-edit-task]'), del = e.target.closest('[data-delete-task]');
     if (edit) {
       const t = db.tasks.find(x=>x.id===edit.dataset.editTask); if (!t) return;
-      editingTask=t.id;$('taskTitle').value=t.title;$('taskDate').value=t.date;$('taskPriority').value=t.priority||'normal';
+      editingTask=t.id;$('taskTitle').value=t.title;window.PrincessJalali.set('taskDate', t.date);$('taskPriority').value=t.priority||'normal';
       $('taskSaveBtn').textContent='💗 ذخیره تغییرات';$('taskCancel').classList.remove('hidden');
       $('taskForm').scrollIntoView({behavior:'smooth',block:'center'});$('taskTitle').focus();
     } else if (del) {
@@ -181,7 +181,7 @@
     toast('یه دور مطالعه ثبت شد! آفرین 🌟');
   });
   $('manualSessionForm').addEventListener('submit', e => {
-    e.preventDefault(); const minutes = Number($('manualMinutes').value), date=$('manualDate').value;
+    e.preventDefault(); const minutes = Number($('manualMinutes').value), date=window.PrincessJalali.get('manualDate');
     if (!hasIsoDate(date) || date > today() || !Number.isFinite(minutes) || minutes<1 || minutes>720) {toast('زمان مطالعه باید معتبر باشد و برای امروز یا روزهای گذشته ثبت شود.');return;}
     addSession({id:uniqueId(),date,minutes,source:'manual'});toast('زمان مطالعه ثبت شد 🌸');
   });
@@ -197,7 +197,7 @@
     days.forEach((iso,index) => {
       const n=nums[index], column=document.createElement('div');column.className='chart-column';
       const d=dateAt(iso);
-      const label = chartRange===7 ? new Intl.DateTimeFormat('fa-IR',{weekday:'short'}).format(d) : new Intl.DateTimeFormat('fa-IR',{day:'numeric'}).format(d);
+      const label = chartRange===7 ? new Intl.DateTimeFormat('fa-IR-u-ca-persian',{weekday:'short'}).format(d) : new Intl.DateTimeFormat('fa-IR-u-ca-persian',{day:'numeric'}).format(d);
       const percent=n>0?Math.max(4,100*n/max):0;
       column.title=`${gregDate.format(d)}: ${fmt(n)} دقیقه`;
       column.innerHTML=`<span class="chart-value">${n?fmt(n):''}</span><div class="bar-track"><div class="bar-fill${iso===today()?' is-today':''}" style="height:${percent}%"></div></div><small>${html(label)}</small>`;
@@ -226,7 +226,7 @@
     $('streakBadges').innerHTML=badges.map(b=>`<div class="streak-badge${streak.best>=b.n?' earned':' locked'}"><span>${b.icon}</span><strong>${b.title}</strong><small>${fmt(b.n)} روز</small></div>`).join('');
   }
 
-  // Gregorian input dates, Persian (Jalali) calendar presentation.
+  // Gregorian ISO dates are retained internally; all user-facing dates are Persian (Jalali).
   const getPersian = date => {
     const parts=jalaliParts.formatToParts(date);
     const pick=type=>Number(parts.find(p=>p.type===type)?.value);
@@ -286,7 +286,7 @@
     const n=db.notes.find(n=>n.id===id);activeNote=n?.id||null;
     $('noteTitle').value=n?.title||'';$('noteBody').value=n?.body||'';
     $('noteDelete').disabled=!n;
-    $('noteEditedHint').textContent=n?`آخرین ویرایش: ${new Intl.DateTimeFormat('fa-IR',{dateStyle:'medium',timeStyle:'short'}).format(new Date(n.updatedAt||Date.now()))}`:'یادداشت جدید';
+    $('noteEditedHint').textContent=n?`آخرین ویرایش: ${new Intl.DateTimeFormat('fa-IR-u-ca-persian',{dateStyle:'medium',timeStyle:'short'}).format(new Date(n.updatedAt||Date.now()))}`:'یادداشت جدید';
     renderNotes();
   }
   $('noteSearch').addEventListener('input',renderNotes);
@@ -304,7 +304,7 @@
   });
 
   // Exams / live countdown and editing.
-  function clearExamForm(){editingExam=null;$('examForm').reset();$('examTime').value='09:00';$('examSaveBtn').textContent='＋ اضافه کردن امتحان';$('examCancel').classList.add('hidden');$('examDate').value=today();}
+  function clearExamForm(){editingExam=null;$('examForm').reset();$('examTime').value='09:00';$('examSaveBtn').textContent='＋ اضافه کردن امتحان';$('examCancel').classList.add('hidden');window.PrincessJalali.set('examDate', today());}
   function renderExams(){
     const nearest=upcomingExams()[0], feature=$('nextExamFeature');
     feature.classList.toggle('hidden',!nearest);
@@ -319,8 +319,8 @@
     }
   }
   $('examForm').addEventListener('submit',e=>{
-    e.preventDefault();const name=$('examName').value.trim(),date=$('examDate').value,time=$('examTime').value;
-    if(!name||!hasIsoDate(date)||!/^\d\d:\d\d$/.test(time)){toast('مشخصات امتحان را کامل کن.');return;}
+    e.preventDefault();const name=$('examName').value.trim(),date=window.PrincessJalali.get('examDate'),time=$('examTime').value;
+    if(!name||!hasIsoDate(date)||!/^\d\d:\d\d$/.test(time)){toast('مشخصات امتحان و تاریخ شمسی معتبر را کامل کن.');return;}
     if(editingExam){const exam=db.exams.find(x=>x.id===editingExam);if(exam){exam.name=name.slice(0,90);exam.date=date;exam.time=time;}}
     else db.exams.push({id:uniqueId(),name:name.slice(0,90),date,time,createdAt:Date.now()});
     if(save()){clearExamForm();updateAll();toast('تاریخ امتحانت ذخیره شد 🎓');}
@@ -329,18 +329,18 @@
   $('examsList').addEventListener('click',e=>{
     const edit=e.target.closest('[data-edit-exam]'),del=e.target.closest('[data-delete-exam]');
     if(edit){const x=db.exams.find(v=>v.id===edit.dataset.editExam);if(!x)return;
-      editingExam=x.id;$('examName').value=x.name;$('examDate').value=x.date;$('examTime').value=x.time;
+      editingExam=x.id;$('examName').value=x.name;window.PrincessJalali.set('examDate', x.date);$('examTime').value=x.time;
       $('examSaveBtn').textContent='💗 ذخیره تغییرات';$('examCancel').classList.remove('hidden');$('examForm').scrollIntoView({behavior:'smooth',block:'center'});
     } else if(del){const x=db.exams.find(v=>v.id===del.dataset.deleteExam);if(!x||!confirm(`امتحان «${x.name}» حذف شود؟`))return;
       db.exams=db.exams.filter(v=>v.id!==x.id);if(editingExam===x.id)clearExamForm();save();updateAll();}
   });
   function updateAll(){refreshOverview();renderTasks();renderStats();renderStreak();renderCalendar();renderExams();}
-  inputDate('taskDate');inputDate('manualDate');$('manualDate').max = today();inputDate('examDate');
+  inputDate('taskDate');inputDate('manualDate');inputDate('examDate');
   renderProfiles();renderNotes();updateAll();
   // A live clock updates exam countdown, streak and day boundaries.
   let lastDay=today();
   setInterval(()=>{
-    if(today()!==lastDay){lastDay=today();$('manualDate').max=today();updateAll();}
+    if(today()!==lastDay){lastDay=today();updateAll();}
     else {refreshOverview();renderExams();}
   },30000);
   window.addEventListener('princess:tab', e=>{

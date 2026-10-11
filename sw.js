@@ -1,11 +1,11 @@
-// Princess Study Planner v4: update-safe offline cache.
+// Princess Study Planner v5: update-safe offline cache.
 // Updating this version + the HTML asset URLs prevents mixing new HTML with old CSS.
-const VERSION = '20261011-v4';
+const VERSION = '20261011-v5';
 const CACHE = `princess-study-planner-${VERSION}`;
 const PREFIX = 'princess-study-planner-';
 const ASSETS = [
   './', './index.html',
-  ...['style.css','data.js','app.js','hub.js','pomodoro.js','tabs.js']
+  ...['style.css','data.js','app.js','jalali-date.js','hub.js','pomodoro.js','tabs.js']
       .map(file => `./${file}?v=${VERSION}`),
   './manifest.webmanifest'
 ];

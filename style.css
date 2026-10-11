@@ -490,3 +490,24 @@ button:disabled {opacity:.48;cursor:not-allowed}
     font-size: .81rem;
   }
 }
+
+
+/* V5 – Jalali date inputs. Keep the existing pink forms unchanged. */
+.jalali-date-field { position:relative; }
+.jalali-date-field > label { font-size:.83rem;color:#7d586d;font-weight:700; }
+.jalali-date-control { position:relative; min-width:0; }
+.jalali-date-control input { width:100%;padding-right:54px;text-align:center;font-variant-numeric:tabular-nums; }
+.jalali-date-button { position:absolute;right:7px;top:50%;transform:translateY(-50%);width:40px;height:39px;display:grid;place-items:center;border:0;border-radius:11px;background:#fff0f7;color:#b75388;font-size:1.12rem;cursor:pointer; }
+.jalali-date-button:hover,.jalali-date-button:focus-visible { background:#ffe0ef;outline:2px solid #ffc3df; }
+.jalali-picker-popover { z-index:50;position:absolute;right:0;top:calc(100% + 7px);width:min(335px,calc(100vw - 50px));padding:13px;background:#fff;border:1px solid #f3cedf;border-radius:18px;box-shadow:0 16px 42px rgba(111,55,91,.20);direction:rtl; }
+.jalali-picker-popover[hidden] { display:none !important; }
+.jalali-picker-header { display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;color:#8f416e; }
+.jalali-picker-header strong {font-size:.9rem;}
+.jalali-picker-header button {width:33px;height:33px;background:#fff1f8;border:0;border-radius:10px;cursor:pointer;color:#a0527a;}
+.jalali-picker-grid { display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;text-align:center; }
+.jalali-weekday {font-size:.75rem;color:#ad7195;font-weight:800;padding:6px 0;}
+.jalali-day {border:0;background:transparent;min-height:34px;border-radius:9px;color:#74405f;font:inherit;font-size:.83rem;cursor:pointer;}
+.jalali-day:hover,.jalali-day:focus-visible {background:#ffebf4;outline:0;}
+.jalali-day.today {box-shadow:inset 0 0 0 1.5px #fa95be;}
+.jalali-day.selected {background:#ffcae0;font-weight:800;}
+.jalali-picker-today {display:block;margin:11px auto 0;border:0;border-radius:11px;padding:7px 18px;color:#a04d79;background:#fff1f8;font:inherit;font-weight:700;font-size:.82rem;cursor:pointer;}
