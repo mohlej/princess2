@@ -28,7 +28,7 @@ body {
   overflow-x: hidden;
 }
 
-button, input, select { font: inherit; }
+button, input, select, textarea { font: inherit; }
 button { -webkit-tap-highlight-color: transparent; }
 
 .sparkles {
@@ -471,4 +471,22 @@ button:disabled {opacity:.48;cursor:not-allowed}
   .notes-list {max-height:200px}
   .hub-item {gap:8px;padding:10px}.hub-item-info strong {font-size:.84rem}
   .item-actions {flex-direction:column}.icon-action {min-width:32px;padding:7px}
+}
+
+/* v4 visual corrections: readable writing area + discoverable mobile navigation */
+.field textarea { font-family: inherit; font-size: .93rem; direction: rtl; }
+@media (max-width: 680px) {
+  .app-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: visible;
+    gap: 7px;
+  }
+  .app-tab {
+    min-width: 0;
+    white-space: normal;
+    line-height: 1.65;
+    padding: 11px 7px;
+    font-size: .81rem;
+  }
 }

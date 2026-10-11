@@ -343,5 +343,5 @@ loadState();
 setInterval(updateNowStatus, 30000);
 
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-v4').catch(() => {}));
 }
