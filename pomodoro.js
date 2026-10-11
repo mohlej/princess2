@@ -2,8 +2,7 @@
 (() => {
   'use strict';
 
-  const STORAGE = 'princessPomodoro_v1';
-  const TAB_STORAGE = 'princessActiveTab_v1';
+  const STORAGE = window.PrincessData.key('pomodoro');
   const MODES = {
     focus: { label: 'زمان مطالعه', finished: '🎉 زمان مطالعه تموم شد! حالا وقت یه استراحته 💗' },
     short: { label: 'استراحت کوتاه', finished: '🌷 استراحت کوتاه تموم شد! آماده‌ی ادامه‌ای؟' },
@@ -11,8 +10,6 @@
   };
   const $ = id => document.getElementById(id);
   const el = {
-    plannerTab: $('plannerTab'), pomodoroTab: $('pomodoroTab'),
-    plannerPanel: $('plannerPanel'), pomodoroPanel: $('pomodoroPanel'),
     clock: $('pomodoroClock'), time: $('pomodoroTime'), modeLabel: $('pomodoroModeLabel'),
     status: $('pomodoroStatus'), finished: $('pomodoroFinished'), rounds: $('pomodoroRounds'),
     start: $('pomodoroStart'), pause: $('pomodoroPause'), reset: $('pomodoroReset'),
@@ -80,23 +77,6 @@
         timer.remainingMs = timer.totalMs;
       }
     } catch { /* اگر اطلاعات خراب بود، از مقادیر پیش‌فرض شروع کن. */ }
-  }
-
-  function setTab(which, save = true) {
-    const isPomo = which === 'pomodoro';
-    el.plannerPanel.hidden = isPomo;
-    el.plannerPanel.classList.toggle('hidden', isPomo);
-    el.pomodoroPanel.hidden = !isPomo;
-    el.pomodoroPanel.classList.toggle('hidden', !isPomo);
-    for (const [tab, active] of [[el.plannerTab, !isPomo], [el.pomodoroTab, isPomo]]) {
-      tab.classList.toggle('active', active);
-      tab.setAttribute('aria-selected', String(active));
-      tab.tabIndex = active ? 0 : -1;
-    }
-    if (save) {
-      try { localStorage.setItem(TAB_STORAGE, isPomo ? 'pomodoro' : 'planner'); } catch {}
-    }
-    if (isPomo) refreshTimer();
   }
 
   function clockText(ms) {
@@ -229,10 +209,16 @@
 
   function finishTimer() {
     if (timer.status !== 'running') return;
+    const completedAt = timer.deadline || Date.now();
     timer.status = 'finished';
     timer.remainingMs = 0;
     timer.deadline = null;
-    if (timer.mode === 'focus') timer.rounds += 1;
+    if (timer.mode === 'focus') {
+      timer.rounds += 1;
+      window.dispatchEvent(new CustomEvent('princess:focus-complete', { detail: {
+        id: `pomo-${completedAt}`, at: completedAt, minutes: Math.round(timer.totalMs / 60000)
+      }}));
+    }
     // صدای از پیش برنامه‌ریزی‌شده را قطع نکن. اگر به‌خاطر رفرش یا
     // محدودیت مرورگر تنظیم نشده بود، پخش مستقیم را امتحان کن.
     if (el.sound.checked && (scheduledDeadline === null || audioContext?.state !== 'running')) {
@@ -319,18 +305,6 @@
     }
   }
 
-  el.plannerTab.addEventListener('click', () => setTab('planner'));
-  el.pomodoroTab.addEventListener('click', () => setTab('pomodoro'));
-  [el.plannerTab, el.pomodoroTab].forEach(tab => {
-    tab.addEventListener('keydown', event => {
-      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
-        event.preventDefault();
-        const next = tab === el.plannerTab ? el.pomodoroTab : el.plannerTab;
-        setTab(next === el.pomodoroTab ? 'pomodoro' : 'planner');
-        next.focus();
-      }
-    });
-  });
   modeButtons.forEach(btn => btn.addEventListener('click', () => changeMode(btn.dataset.pomoMode)));
   el.start.addEventListener('click', startTimer);
   el.pause.addEventListener('click', pauseTimer);
@@ -362,9 +336,6 @@
     el.soundHint.textContent = 'تایمر بعد از بازشدن دوباره ادامه دارد. برای فعال‌کردن مجدد صدای پس‌زمینه روی «تست صدا» بزن.';
   }
   refreshTimer();
-  let savedTab = 'planner';
-  try { savedTab = localStorage.getItem(TAB_STORAGE) || 'planner'; } catch {}
-  setTab(savedTab, false);
   setInterval(refreshTimer, 500);
   document.addEventListener('visibilitychange', refreshTimer);
   window.addEventListener('pageshow', refreshTimer);

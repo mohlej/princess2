@@ -1,6 +1,6 @@
-const CACHE = 'princess-study-planner-v2-pomodoro';
+const CACHE = 'princess-study-planner-v3-hub';
 const PREFIX = 'princess-study-planner-';
-const ASSETS = ['./', './index.html', './style.css', './app.js', './pomodoro.js', './manifest.webmanifest'];
+const ASSETS = ['./', './index.html', './style.css', './app.js', './pomodoro.js', './data.js', './hub.js', './tabs.js', './manifest.webmanifest'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));

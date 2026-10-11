@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'princessStudyPlanner_v1';
+const STORAGE_KEY = window.PrincessData.key('planner');
 const subjectsList = document.getElementById('subjectsList');
 const subjectTemplate = document.getElementById('subjectTemplate');
 const resultSection = document.getElementById('resultSection');

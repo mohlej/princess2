@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#ff7eb8" />
-  <meta name="description" content="برنامه‌ریز مطالعه‌ی پرنسسی برای ساخت برنامه‌ی روزانه، زمان‌بندی درس‌ها و استراحت‌ها" />
+  <meta name="description" content="برنامه‌ریز پرنسسی برای مدیریت درس، پومودورو، کارهای روزانه، تقویم، آمار، یادداشت و امتحان‌ها" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,14 +21,36 @@
     <header class="hero card">
       <div class="hero-badge">👑 برنامه‌ریز پرنسسی</div>
       <h1>امروز با برنامه می‌درخشم ✨</h1>
-      <p>درس‌ها، استراحت‌ها و زمان پایان روزت را خیلی مرتب بچین.</p>
+      <p>یه گوشه‌ی قشنگ برای برنامه‌ریزی، تمرکز و رسیدن به هدف‌هات 🌷</p>
       <div class="save-status" id="saveStatus">همه‌چیز خودکار ذخیره می‌شود 💗</div>
+      <div class="profile-toolbar" aria-label="پروفایل و داده‌های شخصی">
+        <span class="profile-pill">💝 سلام، <strong id="profileGreeting">پرنسس من</strong>!</span>
+        <select id="profileSelect" aria-label="انتخاب پروفایل"></select>
+        <button class="small-button ghost" type="button" id="addProfileBtn">＋ پروفایل جدید</button>
+        <button class="small-button ghost" type="button" id="editProfileBtn">✏️ تغییر نام</button>
+        <button class="small-button ghost" type="button" id="exportBtn">📦 پشتیبان</button>
+        <button class="small-button ghost" type="button" id="importBtn">📥 بازیابی</button>
+        <input type="file" id="importFile" accept=".json,application/json" hidden />
+      </div>
+      <p class="privacy-caption">🔐 اطلاعات هر پروفایل فقط در همین مرورگر نگهداری می‌شود؛ حساب آنلاین و همگام‌سازی بین دستگاه‌ها ندارد.</p>
     </header>
 
     <nav class="app-tabs card" aria-label="بخش‌های برنامه" role="tablist">
       <button type="button" id="plannerTab" class="app-tab active" role="tab" aria-selected="true" aria-controls="plannerPanel" tabindex="0">🗓️ برنامه‌ریز روزانه</button>
-      <button type="button" id="pomodoroTab" class="app-tab" role="tab" aria-selected="false" aria-controls="pomodoroPanel" tabindex="-1">🍅 پومودورو و تمرکز</button>
+      <button type="button" id="pomodoroTab" class="app-tab" role="tab" aria-selected="false" aria-controls="pomodoroPanel" tabindex="-1">🍅 پومودورو</button>
+      <button type="button" id="tasksTab" class="app-tab" role="tab" aria-selected="false" aria-controls="tasksPanel" tabindex="-1">✅ کارهای من</button>
+      <button type="button" id="calendarTab" class="app-tab" role="tab" aria-selected="false" aria-controls="calendarPanel" tabindex="-1">🗓️ تقویم</button>
+      <button type="button" id="statsTab" class="app-tab" role="tab" aria-selected="false" aria-controls="statsPanel" tabindex="-1">📊 آمار و زنجیره</button>
+      <button type="button" id="notesTab" class="app-tab" role="tab" aria-selected="false" aria-controls="notesPanel" tabindex="-1">💌 یادداشت‌ها</button>
+      <button type="button" id="examsTab" class="app-tab" role="tab" aria-selected="false" aria-controls="examsPanel" tabindex="-1">⏳ امتحان‌ها</button>
     </nav>
+
+    <section class="overview-strip" aria-label="نگاهی به امروز">
+      <button class="overview-item" data-go-tab="statsTab" type="button"><span>⏱️ مطالعه‌ی امروز</span><strong id="overviewStudy">۰ دقیقه</strong></button>
+      <button class="overview-item" data-go-tab="tasksTab" type="button"><span>✅ کارهای امروز</span><strong id="overviewTasks">۰ از ۰</strong></button>
+      <button class="overview-item" data-go-tab="statsTab" type="button"><span>🔥 زنجیره موفقیت</span><strong id="overviewStreak">۰ روز</strong></button>
+      <button class="overview-item" data-go-tab="examsTab" type="button"><span>🎓 امتحان بعدی</span><strong id="overviewExam">ثبت نشده</strong></button>
+    </section>
 
     <div id="plannerPanel" role="tabpanel" aria-labelledby="plannerTab">
     <section class="card settings-card">
@@ -216,6 +238,75 @@
       </div>
     </section>
 
+
+    <!-- Checklist -->
+    <section id="tasksPanel" role="tabpanel" aria-labelledby="tasksTab" class="hub-panel hidden" hidden>
+      <div class="card feature-card">
+        <div class="section-title"><div><span class="eyebrow">هر کار کوچیک، یک قدم رو به جلو</span><h2>چک‌لیست کارهای من ✅</h2></div><span class="icon-bubble">🎯</span></div>
+        <form id="taskForm" class="hub-form task-form">
+          <label class="field field-wide"><span>چه کاری باید انجام بدی؟</span><input id="taskTitle" type="text" maxlength="110" placeholder="مثلاً تمرین فصل سوم ریاضی" required /></label>
+          <label class="field"><span>تاریخ انجام</span><input id="taskDate" type="date" required /></label>
+          <label class="field"><span>اولویت</span><select id="taskPriority"><option value="normal">🌷 معمولی</option><option value="high">🔥 مهم</option><option value="low">☁️ سبک</option></select></label>
+          <button type="submit" id="taskSaveBtn" class="primary-btn form-submit">＋ اضافه کردن کار</button>
+          <button type="button" id="taskCancel" class="small-button ghost hidden">لغو ویرایش</button>
+        </form>
+        <div class="tool-row"><p id="tasksSummary" class="small-muted">کارهای تو اینجا نمایش داده می‌شن</p><div class="filter-pills" role="group" aria-label="فیلتر کارها"><button class="filter-button active" type="button" data-task-filter="all">همه</button><button class="filter-button" type="button" data-task-filter="today">امروز</button><button class="filter-button" type="button" data-task-filter="pending">انجام‌نشده</button><button class="filter-button" type="button" data-task-filter="done">انجام‌شده</button></div></div>
+        <div class="mini-progress"><div id="taskProgress" class="mini-progress-fill"></div></div>
+        <div id="tasksList" class="item-list" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Calendar -->
+    <section id="calendarPanel" role="tabpanel" aria-labelledby="calendarTab" class="hub-panel hidden" hidden>
+      <div class="card feature-card">
+        <div class="section-title"><div><span class="eyebrow">تمام پیشرفتت، یک جا</span><h2>تقویم مطالعه 📅</h2></div><span class="icon-bubble">🗓️</span></div>
+        <div class="calendar-toolbar"><button class="small-button ghost" id="calendarPrev" type="button" aria-label="ماه قبل">❯</button><strong id="calendarMonth"></strong><button class="small-button ghost" id="calendarNext" type="button" aria-label="ماه بعد">❮</button><button class="small-button ghost" id="calendarToday" type="button">امروز</button></div>
+        <p class="small-muted calendar-caption">تقویم با روزهای شمسی نمایش داده می‌شود. 🌸 روزهای رنگی یعنی مطالعه ثبت کردی.</p>
+        <div class="calendar-weekdays" aria-hidden="true"><span>ش</span><span>ی</span><span>د</span><span>س</span><span>چ</span><span>پ</span><span>ج</span></div>
+        <div id="calendarGrid" class="calendar-grid" role="grid" aria-label="تقویم مطالعه"></div>
+        <div class="calendar-legend"><span>🌸 مطالعه ثبت‌شده</span><span>🔴 امتحان</span><span>• کار برنامه‌ریزی‌شده</span></div>
+      </div>
+      <div class="card feature-card" id="calendarDetails"><h3 id="calendarSelectedTitle">جزئیات روز</h3><div id="calendarDayContent"></div></div>
+    </section>
+
+    <!-- Stats and streak -->
+    <section id="statsPanel" role="tabpanel" aria-labelledby="statsTab" class="hub-panel hidden" hidden>
+      <div class="card feature-card">
+        <div class="section-title"><div><span class="eyebrow">نتیجه‌ی تلاش‌های کوچیک</span><h2>آمار و نمودار مطالعه 📊</h2></div><span class="icon-bubble">📈</span></div>
+        <div class="stats-cards"><div class="stat-tile"><span>امروز</span><strong id="statToday">۰ دقیقه</strong></div><div class="stat-tile"><span>۷ روز اخیر</span><strong id="statWeek">۰ دقیقه</strong></div><div class="stat-tile"><span>۳۰ روز اخیر</span><strong id="statMonth">۰ دقیقه</strong></div><div class="stat-tile"><span>دورهای تمرکز</span><strong id="statSessions">۰ دور</strong></div></div>
+        <div class="chart-title-row"><h3>نمودار زمان مطالعه</h3><div class="filter-pills" role="group" aria-label="بازه نمودار"><button class="filter-button active" type="button" data-chart-range="7">۷ روز</button><button class="filter-button" type="button" data-chart-range="30">۳۰ روز</button></div></div>
+        <div class="bar-chart-scroll"><div class="bar-chart" id="studyChart" role="img" aria-label="نمودار زمان مطالعه"></div></div>
+        <p class="small-muted">فقط جلسات کامل‌شده‌ی پومودورو و مطالعه‌هایی که خودت ثبت می‌کنی، در آمار حساب می‌شوند؛ زمان برنامه‌ریزی‌شده به‌تنهایی مطالعه‌ی انجام‌شده نیست.</p>
+        <form id="manualSessionForm" class="hub-form manual-form"><label class="field"><span>ثبت دستی مطالعه (دقیقه)</span><input id="manualMinutes" type="number" min="1" max="720" value="30" required /></label><label class="field"><span>تاریخ مطالعه</span><input id="manualDate" type="date" required /></label><button class="primary-btn form-submit" type="submit">＋ ثبت زمان مطالعه</button></form>
+        <div class="tool-row"><h3>جلسات اخیر</h3><span class="small-muted">امکان حذف ثبت اشتباهی</span></div><div id="studySessions" class="item-list compact-list"></div>
+      </div>
+      <div class="card feature-card streak-feature"><div class="section-title"><div><span class="eyebrow">یه روز دیگه، یه پیروزی دیگه</span><h2>زنجیره موفقیت 🔥</h2></div><span class="icon-bubble">🏆</span></div>
+        <div class="streak-hero"><div><span>زنجیره‌ی فعلی</span><strong id="currentStreak">۰</strong><span>روز متوالی</span></div><div><span>رکورد شخصی</span><strong id="bestStreak">۰</strong><span>روز</span></div><div><span>روزهای مطالعه</span><strong id="totalStudyDays">۰</strong><span>روز</span></div></div>
+        <p class="small-muted">با ثبت حداقل یک جلسه مطالعه در هر روز، زنجیره حفظ می‌شود. اگر امروز هنوز مطالعه نکردی، زنجیره‌ی دیروز همچنان نمایش داده می‌شود.</p>
+        <div class="streak-badges" id="streakBadges"></div>
+      </div>
+    </section>
+
+    <!-- Notes -->
+    <section id="notesPanel" role="tabpanel" aria-labelledby="notesTab" class="hub-panel hidden" hidden>
+      <div class="card feature-card">
+        <div class="section-title"><div><span class="eyebrow">نکته‌هایی که نباید فراموش بشن</span><h2>دفترچه یادداشت 💌</h2></div><span class="icon-bubble">📓</span></div>
+        <div class="notes-layout"><div class="notes-sidebar"><label class="field"><span>جستجو بین یادداشت‌ها</span><input type="search" id="noteSearch" placeholder="🔎 جستجو..." /></label><button class="small-button ghost full-width" id="newNoteBtn" type="button">＋ یادداشت جدید</button><div id="notesList" class="notes-list"></div></div>
+          <form id="noteForm" class="note-editor"><label class="field"><span>عنوان یادداشت</span><input id="noteTitle" type="text" maxlength="90" placeholder="اسم یادداشتت رو بنویس" required /></label><label class="field"><span>متن یادداشت</span><textarea id="noteBody" rows="12" maxlength="12000" placeholder="هرچی دوست داری اینجا بنویس... 🌸" required></textarea></label><p class="small-muted" id="noteEditedHint">یادداشت جدید</p><div class="editor-actions"><button type="submit" class="primary-btn">💗 ذخیره یادداشت</button><button type="button" class="secondary-btn" id="noteDelete" disabled>🗑️ حذف</button></div></form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Exams -->
+    <section id="examsPanel" role="tabpanel" aria-labelledby="examsTab" class="hub-panel hidden" hidden>
+      <div class="card feature-card">
+        <div class="section-title"><div><span class="eyebrow">تا روز مهم، با خیال راحت</span><h2>شمارش معکوس امتحان‌ها ⏳</h2></div><span class="icon-bubble">🎓</span></div>
+        <form id="examForm" class="hub-form"><label class="field field-wide"><span>اسم امتحان</span><input id="examName" maxlength="90" type="text" placeholder="مثلاً امتحان علوم" required /></label><label class="field"><span>روز امتحان</span><input id="examDate" type="date" required /></label><label class="field"><span>ساعت شروع</span><input id="examTime" type="time" value="09:00" required /></label><div class="exam-form-actions"><button id="examSaveBtn" type="submit" class="primary-btn">＋ اضافه کردن امتحان</button><button type="button" class="small-button ghost hidden" id="examCancel">لغو ویرایش</button></div></form>
+        <div id="nextExamFeature" class="next-exam-feature hidden"></div>
+        <div class="tool-row"><h3>امتحان‌های من</h3><span class="small-muted">زمان باقی‌مانده به‌صورت زنده به‌روز می‌شود.</span></div><div id="examsList" class="item-list"></div>
+      </div>
+    </section>
+
     <footer>
       ساخته‌شده برای روزهای قشنگ و موفق 💕
     </footer>
@@ -251,7 +342,10 @@
     </article>
   </template>
 
+  <script src="data.js"></script>
   <script src="app.js"></script>
+  <script src="hub.js"></script>
   <script src="pomodoro.js"></script>
+  <script src="tabs.js"></script>
 </body>
 </html>
