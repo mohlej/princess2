@@ -25,6 +25,12 @@
       <div class="save-status" id="saveStatus">همه‌چیز خودکار ذخیره می‌شود 💗</div>
     </header>
 
+    <nav class="app-tabs card" aria-label="بخش‌های برنامه" role="tablist">
+      <button type="button" id="plannerTab" class="app-tab active" role="tab" aria-selected="true" aria-controls="plannerPanel" tabindex="0">🗓️ برنامه‌ریز روزانه</button>
+      <button type="button" id="pomodoroTab" class="app-tab" role="tab" aria-selected="false" aria-controls="pomodoroPanel" tabindex="-1">🍅 پومودورو و تمرکز</button>
+    </nav>
+
+    <div id="plannerPanel" role="tabpanel" aria-labelledby="plannerTab">
     <section class="card settings-card">
       <div class="section-title">
         <div>
@@ -134,6 +140,82 @@
       </section>
     </section>
 
+    </div><!-- /plannerPanel -->
+
+    <section id="pomodoroPanel" role="tabpanel" aria-labelledby="pomodoroTab" class="pomodoro-panel hidden" hidden>
+      <div class="card pomodoro-card">
+        <div class="section-title">
+          <div>
+            <span class="eyebrow">برای یک قدم جلوتر رفتن 🌷</span>
+            <h2>تایمر پومودورو</h2>
+          </div>
+          <span class="icon-bubble">⏰</span>
+        </div>
+
+        <div class="pomodoro-modes" role="group" aria-label="نوع تایمر">
+          <button type="button" class="mode-button active" data-pomo-mode="focus" aria-pressed="true">📖 مطالعه</button>
+          <button type="button" class="mode-button" data-pomo-mode="short" aria-pressed="false">☕ استراحت کوتاه</button>
+          <button type="button" class="mode-button" data-pomo-mode="long" aria-pressed="false">🌸 استراحت بلند</button>
+        </div>
+
+        <div class="pomodoro-clock" id="pomodoroClock" style="--pomo-angle:0deg" aria-label="زمان باقی‌مانده">
+          <div class="pomodoro-clock-inner">
+            <span id="pomodoroModeLabel" class="pomodoro-clock-label">زمان مطالعه</span>
+            <strong id="pomodoroTime" class="pomodoro-time" dir="ltr">25:00</strong>
+            <span class="pomodoro-clock-sparkle" aria-hidden="true">✦ تمرکزت رو شکوفا کن ✦</span>
+          </div>
+        </div>
+
+        <p class="pomodoro-status" id="pomodoroStatus" role="status" aria-live="polite">آماده‌ای؟ روی «شروع» بزن 💗</p>
+
+        <div class="pomodoro-actions">
+          <button type="button" class="primary-btn" id="pomodoroStart">▶ شروع</button>
+          <button type="button" class="secondary-btn" id="pomodoroPause" disabled>⏸ مکث</button>
+          <button type="button" class="secondary-btn" id="pomodoroReset">↻ از اول</button>
+        </div>
+
+        <div class="pomodoro-finished hidden" id="pomodoroFinished" role="alert">
+          🎉 زمانت تموم شد! خسته نباشی، ستاره‌ی پرتلاش!
+        </div>
+
+        <div class="pomodoro-rounds">✨ دورهای مطالعه‌ی تمام‌شده: <strong id="pomodoroRounds">۰</strong></div>
+      </div>
+
+      <div class="card pomodoro-settings-card">
+        <div class="section-title">
+          <div>
+            <span class="eyebrow">همه‌چیز به سلیقه‌ی تو</span>
+            <h2>زمان‌ها و هشدار</h2>
+          </div>
+          <span class="icon-bubble">🎀</span>
+        </div>
+        <div class="form-grid pomodoro-duration-grid">
+          <label class="field">
+            <span>مدت مطالعه (دقیقه)</span>
+            <input id="pomoFocusMinutes" type="number" min="1" max="180" value="25" inputmode="numeric" />
+          </label>
+          <label class="field">
+            <span>استراحت کوتاه (دقیقه)</span>
+            <input id="pomoShortMinutes" type="number" min="1" max="120" value="5" inputmode="numeric" />
+          </label>
+          <label class="field">
+            <span>استراحت بلند (دقیقه)</span>
+            <input id="pomoLongMinutes" type="number" min="1" max="180" value="15" inputmode="numeric" />
+          </label>
+        </div>
+        <div class="pomodoro-sound-row">
+          <label class="pomodoro-sound-label" for="pomoSoundEnabled">
+            <input type="checkbox" id="pomoSoundEnabled" checked />
+            <span>🔔 پخش صدای هشدار هنگام پایان</span>
+          </label>
+          <button type="button" class="small-button ghost" id="pomoTestSound">🎵 تست صدا</button>
+        </div>
+        <button type="button" class="small-button ghost pomodoro-notify-btn" id="pomoEnableNotifications">🔔 فعال‌سازی اعلان مرورگر (اختیاری)</button>
+        <p id="pomoSoundHint" class="pomodoro-hint">برای پخش صدای هشدار، یک بار روی «شروع» یا «تست صدا» بزن. اگر تب در پس‌زمینه باز بماند، تایمر ادامه دارد.</p>
+        <p class="pomodoro-hint">نکته: محدودیت‌های برخی مرورگرها، مخصوصاً در موبایل یا حالت صرفه‌جویی باتری، ممکن است صدای پس‌زمینه را به تأخیر بیندازد. برای اطمینان، تب را نبند.</p>
+      </div>
+    </section>
+
     <footer>
       ساخته‌شده برای روزهای قشنگ و موفق 💕
     </footer>
@@ -170,5 +252,6 @@
   </template>
 
   <script src="app.js"></script>
+  <script src="pomodoro.js"></script>
 </body>
 </html>

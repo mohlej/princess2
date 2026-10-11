@@ -271,3 +271,62 @@ footer { text-align: center; color: #a07d8f; font-size: .78rem; padding: 27px 10
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* ===== تب‌ها و پومودورو ===== */
+.app-tabs {
+  margin-top: 18px; padding: 7px; display: grid; grid-template-columns: 1fr 1fr;
+  gap: 7px; border-radius: 20px;
+}
+.app-tab {
+  cursor: pointer; border: 0; border-radius: 14px; padding: 13px 12px;
+  background: transparent; color: #9b6883; font-weight: 800;
+  transition: background .2s ease, box-shadow .2s ease;
+}
+.app-tab.active { color: #a54277; background: #ffe2ef; box-shadow: inset 0 0 0 1px #ffd0e5; }
+.app-tab:focus-visible, .mode-button:focus-visible, .pomodoro-actions button:focus-visible {
+  outline: 3px solid #bb73e3; outline-offset: 2px;
+}
+.pomodoro-panel { margin-top: 20px; }
+.pomodoro-card, .pomodoro-settings-card { padding: 25px; }
+.pomodoro-settings-card { margin-top: 20px; }
+.pomodoro-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.mode-button { border: 1px solid #f3d7e5; color: #9c6a83; border-radius: 16px; background: #fff9fc; padding: 12px 7px; font-weight: 800; cursor: pointer; }
+.mode-button.active { color: #a5467c; background: linear-gradient(145deg,#ffe2ee,#f5e8ff); border-color: #ffaed0; box-shadow: 0 5px 18px rgba(221,87,157,.10); }
+.pomodoro-clock {
+  width: min(330px, 78vw); aspect-ratio: 1 / 1; margin: 27px auto 15px;
+  border-radius: 50%; padding: 13px; display: grid; place-items: center;
+  background: conic-gradient(from 0deg, #ee82b7 0deg, #b978e7 var(--pomo-angle), #ffe0ed var(--pomo-angle), #ffe0ed 360deg);
+  box-shadow: 0 16px 45px rgba(220,112,158,.17);
+}
+.pomodoro-clock-inner {
+  width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(150deg,#fff,#fff0f8);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px;
+}
+.pomodoro-clock-label { font-size: 1rem; font-weight: 800; color: #a46686; }
+.pomodoro-time { font-size: clamp(3.2rem, 10vw, 5rem); letter-spacing: -1px; font-weight: 800; color: #7b3d65; font-variant-numeric: tabular-nums; line-height: 1.4; }
+.pomodoro-clock-sparkle { font-size: .78rem; color: #b887a0; }
+.pomodoro-status { text-align: center; color: #996780; font-size: .96rem; min-height: 26px; font-weight: 700; margin: 17px auto; }
+.pomodoro-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.pomodoro-actions button { min-width: 105px; justify-content: center; }
+.pomodoro-actions button:disabled { cursor: not-allowed; opacity: .42; transform: none; }
+.pomodoro-rounds { text-align: center; border-radius: 16px; background: #fff4f9; padding: 11px 14px; width: fit-content; margin: 20px auto 0; color: #9d6c85; font-size: .85rem; }
+.pomodoro-finished { background: #fff0fa; color: #a84f82; border: 1px solid #ffc0df; border-radius: 16px; padding: 13px; text-align: center; margin-top: 15px; font-weight: 800; }
+.pomodoro-duration-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.pomodoro-sound-row { margin-top: 23px; padding-top: 20px; border-top: 1px solid #f8dce9; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pomodoro-sound-label { display: flex; align-items: center; gap: 9px; color: #885a73; font-size: .88rem; font-weight: 800; cursor: pointer; }
+.pomodoro-sound-label input { width: 19px; height: 19px; accent-color: #ef72aa; flex: 0 0 auto; }
+.pomodoro-notify-btn { margin-top: 14px; max-width: 100%; }
+.pomodoro-hint { font-size: .78rem; color: #957a89; line-height: 1.95; margin: 13px 0 0; }
+[hidden] { display: none !important; }
+@media (max-width: 680px) {
+  .pomodoro-card, .pomodoro-settings-card { padding: 18px; border-radius: 23px; }
+  .pomodoro-duration-grid { grid-template-columns: 1fr; }
+  .pomodoro-sound-row { align-items: flex-start; flex-wrap: wrap; }
+  .pomodoro-actions button { flex: 1 1 90px; min-width: 0; padding: 13px 6px; }
+  .mode-button { padding: 12px 3px; font-size: .78rem; }
+  .app-tab { font-size: .84rem; }
+}
+@media (max-width: 370px) {
+  .pomodoro-time { font-size: 3rem; }
+  .pomodoro-clock-sparkle { font-size: .64rem; }
+}
